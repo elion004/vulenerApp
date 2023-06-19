@@ -30,6 +30,11 @@ dependencies {
 	testRuntimeOnly 'com.h2database:h2'
 
 	implementation group: 'org.springframework.boot', name: 'spring-boot-starter-security', version: '3.0.5'
+
+	implementation group: 'org.springframework.boot', name: 'spring-boot-starter-validation', version: '3.1.0'
+
+	testImplementation 'org.springframework.boot:spring-boot-starter-test'
+	testImplementation 'org.springframework.boot:spring-boot-starter-webflux'
 }
 
 tasks.named('test') {

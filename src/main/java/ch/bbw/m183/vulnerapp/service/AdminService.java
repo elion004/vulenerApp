@@ -11,34 +11,38 @@ import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
 import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.security.config.annotation.method.configuration.EnableMethodSecurity;
+import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
 @Service
 @Transactional
 @RequiredArgsConstructor
-@EnableMethodSecurity
-@PreAuthorize("hasRole('ADMIN')")
 public class AdminService {
 
-	private final UserRepository userRepository;
+    private final UserRepository userRepository;
+    private final PasswordEncoder passwordEncoder;
 
-	public UserEntity createUser(UserEntity newUser) {
-		return userRepository.save(newUser);
-	}
+    @PreAuthorize("hasRole('ADMIN')")
+    public UserEntity createUser(UserEntity newUser) {
+        //Hash password
+        newUser.setPassword(passwordEncoder.encode(newUser.getPassword()));
+        return userRepository.save(newUser);
+    }
 
-	public Page<UserEntity> getUsers(Pageable pageable) {
-		return userRepository.findAll(pageable);
-	}
+    public Page<UserEntity> getUsers(Pageable pageable) {
+        return userRepository.findAll(pageable);
+    }
 
-	public void deleteUser(String username) {
-		userRepository.deleteById(username);
-	}
+    @PreAuthorize("hasRole('ADMIN')")
+    public void deleteUser(String username) {
+        userRepository.deleteById(username);
+    }
 
-	@EventListener(ContextRefreshedEvent.class)
-	public void loadTestUsers() {
-		Stream.of(new UserEntity().setUsername("admin").setFullname("Super Admin").setPassword("super5ecret"),
-						new UserEntity().setUsername("fuu").setFullname("Johanna Doe").setPassword("bar"))
-				.forEach(this::createUser);
-	}
+    @EventListener(ContextRefreshedEvent.class)
+    public void loadTestUsers() {
+        Stream.of(new UserEntity().setUsername("admin").setFullname("Super Admin").setPassword("super5ecret"),
+                        new UserEntity().setUsername("fuu").setFullname("Johanna Doe").setPassword("bar"))
+                .forEach(this::createUser);
+    }
 }
