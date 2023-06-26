@@ -19,7 +19,6 @@ public class LoginService {
     private final UserRepository userRepository;
 
     public ResponseEntity<UserEntity> whoami(String username) throws Exception {
-        // native queries are more performant!!1 :P
         if (userRepository.findById(username).isPresent()) {
             UserEntity user = userRepository.findById(username).get();
             return ResponseEntity.status(200).body(user);

@@ -15,7 +15,7 @@ public class AdminController {
 
 	private final AdminService adminService;
 
-	@GetMapping("/create")
+	@PostMapping("/create")
 	public UserEntity createUser(@Valid @RequestBody UserEntity newUser) {
 		return adminService.createUser(newUser);
 	}
@@ -25,7 +25,7 @@ public class AdminController {
 		return adminService.getUsers(pageable);
 	}
 
-	@GetMapping("/delete/{username}")
+	@DeleteMapping("/delete/{username}")
 	public void deleteUser(@PathVariable String username) {
 		adminService.deleteUser(username);
 	}

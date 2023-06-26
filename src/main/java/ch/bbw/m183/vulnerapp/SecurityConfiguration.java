@@ -31,17 +31,6 @@ public class SecurityConfiguration {
     @Bean
     public UserDetailsService userDetailsService(PasswordEncoder passwordEncoder) {
 
-
-        UserDetails user = User.withUsername("user")
-                .password(passwordEncoder.encode("password"))
-                .roles("USER")
-                .build();
-
-        UserDetails admin = User.withUsername("admin")
-                .password(passwordEncoder.encode("admin"))
-                .roles("USER", "ADMIN")
-                .build();
-
         return new UserDetailsService() {
             @Override
             public UserDetails loadUserByUsername(String username) throws UsernameNotFoundException {
@@ -78,7 +67,6 @@ public class SecurityConfiguration {
                                 .requestMatchers("/api/**").authenticated()
                                 .anyRequest().permitAll()
                 )
-                //.formLogin().disable()
                 .build();
     }
 
